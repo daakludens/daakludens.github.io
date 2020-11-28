@@ -22,7 +22,6 @@ description: >- # this means to ignore newlines until "baseurl:"
 twitter_username: 
 github_username: daakludens
 minimal_mistakes_skin: default
-locale: ko-KR
 search: true
 comments:
   provider: disqus # false (default), "disqus", "discourse", "facebook", "staticman", "staticman_v2", "utterances", "custom"
