@@ -59,7 +59,7 @@ plugins:
 
 author:
   name   : "Hee Jae Ahn"
-  avatar : "/assets/images/bio-photo.jpg"
+  avatar : "/assets/images/robot.jpg"
   bio    : "매일 1mm 전진"
   links:
     - label: "Website"
