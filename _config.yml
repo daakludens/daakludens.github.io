@@ -62,8 +62,8 @@ author:
   avatar : "/assets/images/robot.jpg"
   bio    : "매일 1mm 전진"
   links:
-    - label: "Website"
-      icon: "fas fa-fw fa-link"
+    - label: "Email"
+      icon: "fas fa-fw fa-envelope-square"
       url: #"https://"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
@@ -79,12 +79,12 @@ footer:
   links:
     - label: "Twitter"
       icon: #"fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/"
+      url: #"https://twitter.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/daakludens"
     - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
+      icon: #"fab fa-fw fa-instagram"
       url: #"https://instagram.com/"
 
 defaults:
