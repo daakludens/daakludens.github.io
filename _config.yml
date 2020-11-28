@@ -26,6 +26,10 @@ search: true
 
 # Build settings
 markdown: kramdown
+highlighter: rouge
+lsi: false
+excerpt_separator: "\n\n"
+incremental: false
 remote_theme: mmistakes/minimal-mistakes
 # Outputting
 permalink: /:categories/:title/
