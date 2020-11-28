@@ -23,10 +23,6 @@ twitter_username:
 github_username: daakludens
 minimal_mistakes_skin: default
 search: true
-comments:
-  provider: disqus # false (default), "disqus", "discourse", "facebook", "staticman", "staticman_v2", "utterances", "custom"
-  disqus:
-    shortname: daakludens
 
 # Build settings
 markdown: kramdown
@@ -35,7 +31,7 @@ remote_theme: mmistakes/minimal-mistakes
 permalink: /:categories/:title/
 paginate: 5 # amount of posts to show
 paginate_path: /page:num/
-timezone: Asia/Seoul
+timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 include:
   - _pages
@@ -62,42 +58,34 @@ plugins:
   - jekyll-include-cache
 
 author:
-  name   : "daakludens"
+  name   : "Hee Jae Ahn"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "목표 : 매일 1mm 전진"
-  location : "Seoul, Korea"
-  email : "heejahn713@gmail.com"
-    links:
-    - label: "Email"
-      icon: "fas fa-fw fa-envelope-square"
-      # url: "mailto:your.name@email.com"
+  bio    : "매일 1mm 전진"
+  links:
     - label: "Website"
       icon: "fas fa-fw fa-link"
-      # url: "https://your-website.com"
+      url: #"https://"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
-      # url: "https://twitter.com/"
-    - label: "Facebook"
-      icon: "fab fa-fw fa-facebook-square"
-      # url: "https://facebook.com/"
+      url: #"https://twitter.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/daakludens"
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
-      # url: "https://instagram.com/"
+      url: #"https://instagram.com/"
 
 footer:
   links:
     - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
+      icon: #"fab fa-fw fa-twitter-square"
       url: "https://twitter.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/daakludens"
     - label: "Instagram"
       icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
+      url: #"https://instagram.com/"
 
 defaults:
   # _posts
@@ -107,7 +95,7 @@ defaults:
     values:
       layout: single
       author_profile: true
-      read_time: false
+      read_time: true
       comments: true
       share: true
       related: true
@@ -118,7 +106,6 @@ defaults:
     values:
       layout: single
       author_profile: true
-      comments: true
 
 category_archive:
   type: liquid
