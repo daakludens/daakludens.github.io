@@ -62,7 +62,7 @@ plugins:
   - jekyll-include-cache
 
 author:
-  name   : "Hee Jae Ahn"
+  name   : "daakludens"
   avatar : "/assets/images/bio-photo.jpg"
   bio    : "목표 : 매일 1mm 전진"
   location : "Seoul, Korea"
