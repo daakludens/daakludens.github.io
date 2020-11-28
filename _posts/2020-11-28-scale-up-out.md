@@ -125,7 +125,6 @@ IBM Red Book에서 정리한 scale out에 대한 장점입니다.
 
 ### 출처
 - IBM red books. Scale up for Linux on LinuxONE 2019     
-<https://books.google.co.kr/books?id=SxqjDwAAQBAJ&pg=PA6&dq=scale+up+scale+out&hl=ko&sa=X&ved=2ahUKEwiIpcKO8d3sAhXLyYsBHbMECfYQ6AEwAXoECAkQAg#v=onepage&q&f=true>
 - 로드 밸런싱     
 <https://dheldh77.tistory.com/entry/네트워크-로드-밸런싱Load-Balancing>
 - scale up과 scale out     
