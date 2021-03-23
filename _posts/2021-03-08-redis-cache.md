@@ -58,8 +58,6 @@ Memcached는 완전한 인메모리 캐시로 volatile한 성격을 띕니다. �
 - allkeys-lfu (Redis 4.0) : 제일 사용되지 않는 데이터 축출       
 출처 : [https://redis.io/topics/lru-cache](https://redis.io/topics/lru-cache)
 
-<br>
-
 **트랜잭션**                       
 Memcached는 원자성(atomic)은 있지만 트랜잭션을 제공하지 않는 반면 Redis는 트랜잭션 기능을 제공합니다.
 
