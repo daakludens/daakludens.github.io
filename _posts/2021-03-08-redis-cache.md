@@ -18,7 +18,7 @@ MySQL 같은 디스크 저장소에서 데이터를 불러오려면 네트워크
 
 이렇게만 본다면 느린 디스크 대신 캐시 만을 활용하는 게 오히려 효율적으로 보입니다. 하지만 캐시 적용에 중요한 부분 중 캐시 히트율과 인메모리 db의 특징에 대해 주목했습니다. 
 
-![image](https://user-images.githubusercontent.com/71559880/113029330-41990980-91c7-11eb-9de4-b2208d99b8ba.png)
+<p align="center"><img src="/assets/images/cache-hit-fail.png" with="800" height="400"></p>
 
 <br>
 
