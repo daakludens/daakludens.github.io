@@ -53,10 +53,10 @@ String으로만 구성된 Memcached는 일반적으로 Redis보다 빠르지만 
 Memcached는 멀티 코어 구조로 된 멀티 쓰레드를 지원합니다. 따라서 용량을 늘리려면 코어나 쓰레드를 추가하는 수평멀티 쓰레드를 지원합니다. 따라서 용량을 늘리려면 코어나 쓰레드를 추가하는 수평적 확장이 가능합니다. 큰 데이터셋을 다뤄야 하는 경우 Redis보다 더 빠른 성능을 보입니다.
 그에 비해 Redis는 싱글 쓰레드 구조이며 수평적, 수직적 확장 둘 다 가능합니다. 수평적 확장의 경우 노드 그룹 (샤드) 개수를 조정하면 되고, 수직적 확장은 노드의 클러스터 크기를 늘리면 됩니다.
 
-### 데이터 지속성                
-데이터 지속성(data persistence)은 어떤 변화 후에도 데이터의 유지 여부를 뜻하며 가변적(volatile)이지 않은 데이터베이스에 담겨져야 지속성을 가질 수 있습니다.
-Memcached는 완전한 인메모리 캐시로 volatile한 성격을 띕니다. 반면 Redis는 완전한 인메모리가 아닌 데이터 스토어로 데이터 지속성을 유지할 수 있는 방법이 2개 있습니다.
-먼저 RDB snapshot는 특정 시간에 모든 데이터셋을 스냅샷으로 찍어 디스크 내에 있는 파일에 저장하는 기능입니다. 복원할 데이터 양이 많아질 수록 응답 시간이 길어지는 특징이 있어 AOF가 사용될 수 있습니다. AOF(Append-Only File) log는 레디스 서버에서 수행된 모든 쓰기 기능을 기록하며 디스크에 순서대로 적히기 때문에 후에 그대로 수행하면 데이터를 복원할 수 있다. 지워지면 안 되는 데이터의 경우 매우 유용한 기능이다. 파일에 append로 계속해 붙이기 때문에 데이터가 변질될 가능성은 없지만 레디스를 계속 돌릴 수록 RDB보다 저장할 데이터가 훨씬 빨리 증가합니다.
+### 데이터 영속성                
+데이터 영속성(data persistence)은 데이터를 생성했던 애플리케이션이 종료되도 데이터가 유지됨을 뜻합니다. 영속성이 유지되려면 가변적(volatile)이지 않은 데이터베이스에 담겨져야 합니다.
+Memcached는 완전한 인메모리 캐시로 휘발성 데이터를 가지게 되어 Memcached가 종료되면 그동안 저장됐던 데이터는 사라지게 됩니다. 반면 Redis는 완전한 인메모리가 아닌 데이터 스토어로 데이터를 유지할 수 있는 방법이 두 가지가 있습니다.
+먼저, `RDB snapshot`는 특정 시간에 모든 데이터셋을 스냅샷으로 찍어 디스크 내에 있는 파일에 저장하는 기능입니다. 복원할 데이터 양이 많아질 수록 응답 시간이 길어지는 특징이 있습니다.  두번째로 `AOF(Append-Only File) log`는 레디스 서버에서 수행된 모든 쓰기 기능을 기록하며 디스크에 순서대로 적습니다. 서버가 에러가 나도 로그 내용을 그대로 수행하면 데이터를 복원할 수 있습니다. 파일에 append 명령어로 이어 붙여서 데이터가 변질될 가능성은 없지만 레디스가 계속 켜져있으면 RDB보다 저장할 데이터가 훨씬 빨리 증가합니다.
 
 ### 데이터 축출 정책에 대한 알고리즘                        
 데이터 축출 정책(eviction policy)은 메모리에 여유 공간이 남지 않았을 때 축출되는 대상의 우선 순위를 정하는 방법을 뜻합니다. Memcached는 가장 오랫동안 사용되지 않은 데이터를 축출하는 LRU(Least Recently Used)만 지원되지만 Redis는 8가지 정책 중 고를 수 있습니다. 
@@ -68,14 +68,14 @@ volatile-LRU | 가장 사용되지 않음 + 만료 기간 설정
 allkeys-random | 랜덤하게 축출
 volatile-random | 랜덤 + 만료 기간 축출
 volatile-TTL | 제일 짧은 TTL + 만료 기간 설정
-volatile-lfu | 제일 사용되지 않음 + 만료 기간 설정(Redis 4.0)
-allkeys-lfu | 제일 사용되지 않는 데이터 축출(Redis 4.0)
+volatile-lfu | 제일 사용되지 않음 + 만료 기간 설정(Redis 4.0부터 추가)
+allkeys-lfu | 제일 사용되지 않는 데이터 축출(Redis 4.0부터 추가)
 
 출처 : [https://redis.io/topics/lru-cache](https://redis.io/topics/lru-cache)
 
 <br>
 
-### 트랜잭션                       
+### 트랜젝션                       
 Memcached는 원자성(atomic)은 있지만 트랜잭션을 제공하지 않는 반면 Redis는 트랜잭션 기능을 제공합니다.
 
 <br>
@@ -89,7 +89,7 @@ Cache를 적용하기 위해 Redis를 사용하기로 했습니다.
 <br>
 
 ## 적용
-먼저 Redis 캐시를 적용하기 위해 CacheManger를 configure 해줘야 합니다.
+먼저 Redis 캐시를 적용하기 위해 CacheManger를 configure 해줘야 합니다. 제 경우는 게임 리스트를 별도로 캐시하기 위해 Map 객체를 선언해 그 안에 GAME_LIST라는 키값과 5초 후에 캐싱 데이터를 삭제하는 entryTtl을 지정해줬습니다.
 ```
 @Bean
     public RedisCacheManager redisCacheManager(RedisConnectionFactory redisConnectionFactory) {
@@ -116,8 +116,7 @@ Cache를 적용하기 위해 Redis를 사용하기로 했습니다.
 
 <br>
 
-제 경우는 게임 리스트를 별도로 캐시하기 위해 GAME_LIST라는 이름과 5초 후에 캐싱 데이터를 삭제하는 TTL을 지정해줬습니다.
-그리고 캐시를 사용하고 싶은 메서드에 @Cacheable을 사용하면 첫 요청 시에 디스크에서 가져온 데이터를 저장해 다음 호출 때 저장된 데이터를 그대로 불러오게 됩니다. Redis는 키-값 형태로 데이터를 저장하기에 키를 argument로 받는 listInfo로 지정하고, 위에서 지정했던 redisCacheManager를 캐시 매니저로 지정해주면 됩니다.
+Configuration이 끝나면 캐시를 사용하고 싶은 메서드에 @Cacheable을 사용하면 첫 요청 시에 디스크에서 가져온 데이터를 캐시에 저장합니다. 그러면 다음 호출부터는 저장된 데이터를 그대로 불러옵니다. Redis는 키-값 형태로 데이터를 저장하기에 키를 argument로 받는 listInfo로 지정하고, 값은 GAME_LIST 키를 찾아 가져오게 합니다.
 
 ```
 @Cacheable(key = "#listInfo", value = GAME_LIST, cacheManager = "redisCacheManager")
@@ -131,7 +130,7 @@ public List<GameDto> selectGameList(GamePagingDto listInfo) {
 
 <br>
 
-프로젝트 링크 : [링크](https://github.com/f-lab-edu/ludensdomain)
+프로젝트 보기 : [프로젝트 링크](https://github.com/f-lab-edu/ludensdomain)
 
 ### 출처
 1. https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#cache
