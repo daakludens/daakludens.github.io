@@ -130,7 +130,7 @@ public List<GameDto> selectGameList(GamePagingDto listInfo) {
 
 <br>
 
-프로젝트 보기 : [프로젝트 링크](https://github.com/f-lab-edu/ludensdomain)
+프로젝트 보기 : [링크](https://github.com/f-lab-edu/ludensdomain)
 
 ### 출처
 1. https://docs.spring.io/spring-framework/docs/current/reference/html/integration.html#cache
