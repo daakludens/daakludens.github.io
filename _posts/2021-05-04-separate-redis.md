@@ -159,6 +159,8 @@ They all require you to do something different at different points on that scale
 
 읽어주셔서 감사합니다.
 
+Redis를 적용한 프로젝트는 [여기](https://github.com/f-lab-edu/ludensdomain)서 볼 수 있습니다.
+
 <br>
 
 ## 출처
