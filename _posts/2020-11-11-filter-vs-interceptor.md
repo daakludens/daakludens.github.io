@@ -1,11 +1,17 @@
 ---
-title: "Filter와 Interceptor를 제대로 구분해 사용하는 법"
-excerpt: "비슷한 두 기능의 차이에 대하여"
-comments: true
+header:
+  teaser: /assets/images/my-awesome-post-teaser.jpg
+title: 
+  "Filter와 Interceptor를 제대로 구분해 사용하는 법"
+excerpt: 
+  "비슷한 두 기능의 차이에 대하여"
+comments: 
+  true
 
 categories:
   - Spring
-last_modified_at: 2020-11-11
+last_modified_at: 
+  2020-11-11
 ---
 
 ### 개요
