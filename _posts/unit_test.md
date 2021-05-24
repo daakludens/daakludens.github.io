@@ -1,0 +1,135 @@
+---
+title: "반복적 로직 체크를 위한 단위 테스트 적용"
+excerpt: "JUnit 6, Mockito, Unit Test"
+comments: true
+
+categories:
+  - Project
+last_modified_at: 2021-05-25
+---
+## 배경
+
+프로젝트를 시작한 이래로 지금까지 제가 해온 코드 작성 과정은 다음과 같습니다. 여러 로직을 담은 클래스 작성이 끝나면 애플리케이션 전체를 컴파일해 API 툴로 로직 수행 여부를 확인했습니다. 
+
+시작할 때는 못 느꼈지만 코드가 늘어나면서 문제가 점점 커졌습니다. 컴파일 시간이 코드 양에 비례해 늘어나고 잘 동작할 거라 생각된 로직에서 지속적인 에러가 발생했습니다. 막상 에러를 보면 사소한 실수로 발생한 경우도 잦았는데, 이를 다 수정하다 보면 프로젝트 진행 속도가 점진적으로 느려졌습니다. 그래서 개선 방안으로 자바 테스팅 프레임워크를 도입하기로 했습니다.
+
+<br>
+
+## 테스팅 프레임 워크
+
+자바 테스팅 프레임워크는 말 그대로 자바에서 제공하는 테스트를 위한 프레임워크입니다. 여러 프레임워크가 있지만 그 중에서 `JUnit 6`을 사용했습니다. JUnit은 가장 잘 알려져 있는 프레임워크로 테스트 러너(test runner)와 관련 어노테이션 기능을 제공해 빠르고 간단하게 테스트 코드를 작성할 수 있게 해줍니다. 무엇보다 `단위 테스트`에 가장 많은 기능을 제공하는 프레임워크라 선택하게 됐습니다.
+
+<br>
+
+### 단위 테스트(Unit Testing)
+
+단위 테스트는 작은 단위의 기능을 테스트합니다. 여기서 작은 단위란 정확한 정의는 없지만 보통 한 메서드 또는 메서드 내 세부 기능 중 하나를 의미합니다. 
+
+다음은 단위 테스트의 특징입니다. 
+
+- 각 기능의 요구 조건을 한 눈에 파악할 수 있어 유지 보수에 효과적
+- 자동화 테스트로 기능이 잘 수행되는지 반복적으로 체크 가능
+- 테스트를 작성하면서 기존 코드의 오버 엔지니어링이나 에러를 발견하고 수정 가능
+- 빠뜨렸거나 불필요하게 있는 메서드 요구 사항을 파악 가능
+- 외부의 영향에 구애 받지 않고 테스트하는 기능의 로직에만 집중
+
+전체 애플리케이션을 테스트하는 통합 테스트도 있기는 하지만 여러 이유로 단위 테스트가 저에게 더 필요한 기능이라 생각했습니다. 우선 전체가 아닌 각 기능을 테스트하기 때문에 에러가 나는 지점을 즉각적으로 찾아내 디버깅 시간을 단축할 수 있습니다. 그리고 하나의 기능에만 집중하니 목적과 세부 사항에 집중해 더 좋은 코드를 작성할 거란 희망이 있었습니다. 
+
+무엇보다 제일 큰 이유로 통합 테스트는 **애플리케이션 전체를 가동 시켜 빈을 주입해야 하지만 단위 테스트는 그럴 필요가 없다**는 겁니다. 통합 테스트에서 빈의 생성 주기를 관리하는 `ApplicationContext`는 빈을 생성, 동작, 파기시키는 데 그만큼 시간 더 걸립니다. 그리고 빈이 만들어지면 DB 같은 외부 시스템과 연결되어 실제 애플리케이션처럼 동작합니다. 만약 테스트 도중 db가 중지된다면 오래 걸리는 테스트를 처음부터 다시 시작해야 합니다. 그에 반해 단위 테스트는 외부 영향 없이 로직에만 집중할 수 있습니다. 
+
+단위 테스트의 단점이라면 실제 애플리케이션 전체를 실행했을 때 에러가 날 가능성이 있다는 겁니다. 각 메서드가 동작하더라도 메서드 간 연결 지점에서 보지 못한 오류가 있을 수 있기 때문입니다. 그러기에 개발 초기에는 단위 테스트로 작은 기능들을 테스트하고 큰 기능이 만들어지면 통합 테스트로 전체 흐름에 이상이 없는지 체크하는 과정이 필요하다 생각됩니다. 저는 우선 이번 단계에서는 단위 테스트만 다뤄보도록 하겠습니다.
+
+<br>
+
+### Mockito
+
+외부의 영향을 받지 않는 단위 테스트라 하더라도 외부 API를 받아오는 코드도 테스트 시 작성해야 합니다. 이때는 목(mock) 객체를 이용해 실제 객체가 있는 것처럼 동작하도록 만들 수 있습니다. 이를 위해 목 프레임워크로 Mockito를 사용했습니다.
+
+<br>
+
+## 적용
+
+### 서비스 레이어
+
+```jsx
+public void insertGame(GameDto gameDto) {
+    try {
+        gameMapper.insertGame(gameDto);
+    } catch(Exception e) {
+        throw new InsertFailedException();
+    }
+}
+```
+
+<br>
+
+### 단위 테스트
+
+```jsx
+@ExtendWith(MockitoExtension.class)
+	public class GameServiceTest {
+
+	@Mock
+	GameMapper gameMapper;
+	
+	@InjectMocks
+	GameService gameService;
+	
+	@BeforeEach
+	    void setUp() {
+	        game = GameDto
+	                .builder()
+	                .id(1)
+	                .title("게임명")
+	                .genre("장르")
+	                .description("설명")
+	                .releaseDate(now())
+	                .price(10000)
+	                .developer(1)
+	                .publisher(1)
+	                .rating(9)
+	                .sales(100)
+	                .status(3)
+	                .genreName("액션")
+	                .publisherName("우너브라더스")
+	                .developerName("우비소프트")
+	                .statusName("통과")
+	                .build();
+
+	@Test
+	@DisplayName("게임 정보를 입력하면 새로운 게임 정보를 입력한다.")
+	public void insertGameSuccess() {
+	    doNothing().when(gameMapper).insertGame(game);
+	    gameService.insertGame(game);
+	    verify(gameMapper).insertGame(game);
+	}
+	
+	@Test
+	@DisplayName("게임 정보를 입력하는 도중 실패했을 때 InsertFailedException이 발생한다.")
+	public void insertGameFailed() {
+	    doThrow(InsertFailedException.class).when(gameMapper).insertGame(game);
+	    assertThrows(InsertFailedException.class, ()-> gameService.insertGame(game));
+	    verify(gameMapper).insertGame(game);
+	}
+}
+```
+
+<br>
+
+### 결과
+![image](https://user-images.githubusercontent.com/71559880/119378646-6efec100-bcf9-11eb-94b6-7e6b45cd7cf1.png)
+
+<br>
+
+[프로젝트 바로 가기](https://github.com/f-lab-edu/ludensdomain)
+
+<br>
+
+## 출처
+어떤 자바 테스트 프레임워크가 가장 좋을까
+[https://www.lambdatest.com/blog/9-of-the-best-java-testing-frameworks-for-2021/](https://www.lambdatest.com/blog/9-of-the-best-java-testing-frameworks-for-2021/)
+
+소프트웨어 장인 - 산드로 만쿠소
+
+Mockito 
+[https://site.mockito.org/](https://site.mockito.org/)
