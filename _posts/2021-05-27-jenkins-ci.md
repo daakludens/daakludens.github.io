@@ -198,7 +198,7 @@ GitHub 상에서도 push 이력 옆에 초록색 체크 마크가 붙어있으�
 <br>
 
 ## 출처
-Learing Continous Integration with Jenkins 2nd Edition
-[https://www.notion.so/CI-30b9c81190634736b2d7c4afb2b97a89](https://www.notion.so/CI-30b9c81190634736b2d7c4afb2b97a89)
+Learing Continous Integration with Jenkins 2nd Edition                             
+[https://www.notion.so/CI-30b9c81190634736b2d7c4afb2b97a89](https://www.notion.so/CI-30b9c81190634736b2d7c4afb2b97a89)            
 [**https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#handling-credentials**](https://www.jenkins.io/doc/book/pipeline/jenkinsfile/#handling-credentials)
 
