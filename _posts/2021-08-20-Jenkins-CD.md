@@ -1,5 +1,5 @@
 ---
-title: "빌드와 단위 테스트 자동화를 위한 Jenkins CI 도입"
+title: "안정적인 배포 자동화를 위한 Jenkins CD 도입"
 excerpt: "Jenkins, CD, Agile"
 comments: true
 
@@ -21,9 +21,11 @@ last_modified_at: 2021-08-20
 <br>
 
 ## 흐름
-Jenkinsfile은 저번 프로젝트(url)에 이어 배포 관련 step만 추가해주면 됩니다. 
+Jenkinsfile은 저번에 작성한 [CI](https://daakludens.github.io/project/jenkins-ci/)에 이어 배포 관련 step만 추가해주면 됩니다. 
 배포 과정이 제대로 동작한다면 빌드로 만든 JAR 파일을 배포 서버로 이동 시켜서 실행시킵니다. 
 실행은 배포 서버 내 쉘 스크립트로 명령어를 주었습니다.
+
+![test  Copy of Untitled 2](https://user-images.githubusercontent.com/71559880/130258871-01135997-ce32-419a-abc7-00c4aed8aec2.jpg)
 
 <br>
 
@@ -104,11 +106,22 @@ java -Dspring.profiles.active=prod -jar $JAR_NAME &
 <br>
 
 ## 회고
-너무 많은 TRY로 인해 더러워진 커밋 내역이 문제였다.
-이걸 해결할 방법을 찾아야 겠다.
+지금까지 프로젝트를 진행하면서 가장 많은 시도를 한 단계가 CI와 CD였습니다.
+CI와 CD 테스팅 과정에는 푸시가 필연적으로 들어가게 되고, 그만큼의 커밋 내역이 쌓이게 됐습니다.
+
+![Screenshot_1](https://user-images.githubusercontent.com/71559880/130262192-4fe3ed72-55c5-42aa-a911-91cc823af31c.png)
 
 <br>
 
+한 브랜치의 커밋 내역만 해도 이렇게 길고 지저분합니다. 그런데 이 브랜치를 다른 브랜치에 merge하게 되면 이 커밋 내역까지 합쳐집니다.
+커밋 내역은 형상 관리에도 쓰이지만 브랜치 개발 과정을 한 눈에 볼 수 있고 유의미한 정보만 담기는 것이 중요합니다.
+
+그래서 아예 테스팅용 브랜치로 따로 정의하는 게 좋을 것 같다는 생각이 들었습니다.
+다음에 이러한 테스팅 과정이 길법한 기능 추가가 필요한 경우, 똑같이 브랜치를 생성해 진행하되 테스팅용 브랜치는 삭제하고 새 feature 브랜치에 깔끔한 코드를 커밋해 머지하려 합니다.
+
+<br>
+
+# 마치며
 전체 코드는 아래 링크에서 확인할 수 있습니다.           
 [프로젝트 링크](https://github.com/f-lab-edu/ludensdomain)
 
