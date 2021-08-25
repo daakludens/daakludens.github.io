@@ -5,7 +5,7 @@ comments: true
 
 categories:
   - Project
-last_modified_at: 2021-08-20
+last_modified_at: 2021-08-26
 ---
 # 서문
 전반적인 사업 분야에서 폭발적인 데이터 생성량과 데이터 분석의 중요성이 높아지는 만큼 귀중한 데이터를 저장하고 활용할 데이터베이스의 중요성 또한 대두되고 있습니다. 
@@ -33,6 +33,20 @@ MySQL에서 실행계획은 DB의 뇌를 담당하는 옵티마이저가 전달�
 
 실행 계획으로 데이터 정렬 방식 또는 사용되는 인덱스 등을 파악해 데이터를 더 신속하게 가져올 수 있게 튜닝할 수 있습니다. 
 실행 계획을 보려면 기존의 쿼리문 앞에 `EXPLAIN` 키워드를 추가해 실행시키면 됩니다.
+
+예시 :        
+```
+// 기존 쿼리문
+SELECT ID, NAME, ADDRESS, PHONE_NUM, EMAIL
+FROM USER
+WHERE ID = 1;
+
+// 실행 계획 실행
+EXPLAIN
+SELECT ID, NAME, ADDRESS, PHONE_NUM, EMAIL
+FROM USER
+WHERE ID = 1;
+```
 
 <br>
 
