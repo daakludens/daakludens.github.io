@@ -37,16 +37,23 @@ MySQL에서 실행계획은 DB의 뇌를 담당하는 옵티마이저가 전달�
 예시 :        
 ```
 // 기존 쿼리문
-SELECT ID, NAME, ADDRESS, PHONE_NUM, EMAIL
-FROM USER
-WHERE ID = 1;
+SELECT id, name, password, email, date_of_birth, phone_num, role
+from user;
 
 // 실행 계획 실행
 EXPLAIN
-SELECT ID, NAME, ADDRESS, PHONE_NUM, EMAIL
-FROM USER
-WHERE ID = 1;
+SELECT id, name, password, email, date_of_birth, phone_num, role
+from user;
 ```
+
+<br>
+
+`EXPLAIN` 키워드를 SELECT 쿼리문 앞에 붙이면 MySQL의 비용 기반 최적화 방법을 사용하는 옵티마이저가 도출한 여러 시나리오 중 가장 효율적인 실행 계획을 선택하고, 그 실행 계획을 보여줍니다.
+EXPLAIN으로 나온 기본적인 실행 계획은 아래 그림처럼 나타납니다.
+
+![Screenshot_1](https://user-images.githubusercontent.com/71559880/130981166-792546ee-7306-4ffc-9daa-fec146a50805.png)
+
+테이블의 각 컬럼은 쿼리문에 따라 다른 내용을 보여주고, 이 내용을 해석해 현재 쿼리문의 성능을 파악할 수 있습니다.
 
 <br>
 
