@@ -15,7 +15,8 @@ last_modified_at: 2021-08-26
 개발을 시작했다면 어느 시점엔 SQL문을 무조건 한 번은 다뤄보게 됩니다. 
 요즘은 ORM 기술을 이용한 JPA가 많이 쓰이긴 합니다만, 기본적인 SQL 문법에 대해 아는 게 좋다고 합니다. 
 왜냐면 JPA도 결국은 SQL문으로 실행되고 데이터베이스 실행 방식에 대해 더 잘 이해할 수 있기 때문입니다. 
-JPA 사용 중 예상치 못한 에러가 났을 때 에러가 발생한 부분을 독해해 디버깅할 수 있어야 하기도 하고요. 
+JPA 사용 중 예상치 못한 에러가 났을 때 에러가 발생한 부분을 독해해 디버깅할 수 있어야 하기도 하고요.
+더하자면 JPA를 사용하면서 더 세밀한 SQL문을 써야하는 경우 Querydsl도 병행해 진행하는 방식도 꽤 있다고 하니 SQL문은 무조건 알아야 하는 것 같습니다.
 
 아무튼, 다시 SQL 얘기로 돌아오자면 XML 형식으로 쿼리문을 작성해 데이터를 다루는 건 다소 쉽습니다. 
 다른 프로그래밍 언어와 달리 사람이 쓰는 자연 언어와 더 유사하기에 키워드만 알면 대충 어떤 흐름으로 조합하면 될 거라는 감이 옵니다. 
@@ -163,9 +164,50 @@ AND (G.status = 3 OR G.status = 4)
 ORDER BY G.id
 ```
 
+두 해결책을 적용한 수정된 쿼리문은 다음과 같습니다.
+```
+SELECT G.id,
+       G.title,
+       G.genre,
+       G.description,
+       G.release_date releaseDate,
+       G.price,
+       G.developer,
+       G.publisher,
+       G.rating,
+       G.sales,
+       G.status,
+       R.name genreName,
+       D.name developerName,
+       P.name publisherName,
+       S.name statusName
+FROM game G
+         LEFT OUTER JOIN genre R ON G.genre = R.id
+         LEFT OUTER JOIN developer D ON G.developer = D.id
+         LEFT OUTER JOIN publisher P ON G.publisher = P.id
+         LEFT OUTER JOIN status S ON G.status = S.id
+WHERE G.id > 47
+  AND (G.status = 3 OR G.status = 4)
+ORDER BY G.id
+LIMIT 30;
+```
+
+위 쿼리문에 EXPLAIN을 추가하면 나아진 실행계획을 얻습니...
+![Screenshot_2](https://user-images.githubusercontent.com/71559880/130991720-44bc5711-b9bb-42ae-9e1f-33ff2d7c5ccb.png)
+
 <br>
 
-그러면 이제 정렬을 할 때 filesort를 사용하지 않아 Extra 컬럼에서 없어진 걸 볼 수 있습니다.
+저는 솔직히 이 계획이 처음 나왔을 때 당황했습니다. impossible이라는 무시무시한 단어가 들어 있어 쿼리문을 잘못 작성한 거라 생각할 수 있지만 정상 작동한 쿼리입니다.
+"impossible where noticed after reading const tables"는 단순히 WHERE문에 부합하는 레코드를 찾을 수 없다는 의미입니다.
+그냥 조건에 부합하는 값을 가져오도록 쿼리문을 바꿔 다시 실행계획을 호출하면 됩니다. 
+그러면 다음과 같이 제가 원했던 실행계획 테이블이 나옵니다.
+
+![Screenshot_4](https://user-images.githubusercontent.com/71559880/130994218-a4c8e1ca-9452-481a-9844-64312cef1fce.png)
+
+<br>
+
+기존에는 type이 `ALL`로 표시되고 Extra에 `using filesort`로 표시되었습니다.
+이제는 type이 `range`와 `eq_ref`고, Extra는 `using where`로 나옵니다.
 
 <br>
 
