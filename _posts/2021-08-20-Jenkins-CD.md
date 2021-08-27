@@ -75,7 +75,15 @@ steps([$class: 'BapSshPromotionPublisherPlugin']) {
 <br>
 
 ## 쉘 스크립트
-여기서 작성된 쉘 스크립트의 역할은 
+리눅스 서버에 쉘 스크립트를 실행시키면 작성한 bash 명령어가 동작하게 됩니다.
+반복적으로 고정된 작업을 호출해야 한다면 쉘스크립트가 적합 합니다.
+
+아래에 나와 있는 명령어의 흐름은 다음과 같습니다.
+1. 쉘스크립트에 쓸 변수(JAR 파일 루트와 JAR 파일명) 선언
+2. JAR 파일이 있는 루트로 이동
+3. 동일한 JAR 파일명으로 기동 중인 프로세스의 PID 가져오기
+4. PID 확인 후 있으면 종료시키고 없다면 그대로 진행 
+5. java -jar 명령어로 JAR 파일 배포
 
 ```
 #!/bin/bash
@@ -104,6 +112,11 @@ fi
 echo "Deploy Application"
 java -Dspring.profiles.active=prod -jar $JAR_NAME &
 ```
+
+<br>
+
+마지막에 java -jar 명령어 끝에 &를 붙여 애플리케이션이 백그라운드에서 돌도록 해줍니다.
+안 그러면 포그라운드에서 실행해도 쉘스크립트가 끝나면서 애플리케이션이 같이 종료됩니다.
 
 <br>
 
